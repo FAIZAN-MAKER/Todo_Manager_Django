@@ -14,13 +14,14 @@
     gap: 6px;
     font-size: 12px;
     font-weight: 600;
-    color: #534AB7;
-    background: #EEEDFE;
+    color: var(--purple-600);
+    background: var(--purple-50);
     padding: 6px 14px;
     border-radius: 20px;
     margin-bottom: 16px;
     letter-spacing: 0.3px;
     text-transform: uppercase;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 .about-hero h1 {
     font-size: 40px;
@@ -28,9 +29,10 @@
     color: var(--gray-900);
     letter-spacing: -1px;
     margin-bottom: 14px;
+    transition: color 0.3s ease;
 }
 .about-hero h1 span {
-    background: linear-gradient(135deg, #534AB7, #8B7FDF);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -44,27 +46,28 @@
 }
 
 .mission-card {
-    background: #fff;
+    background: var(--bg-surface);
     border-radius: 20px;
     padding: 40px 44px;
-    border: 0.5px solid rgba(0,0,0,0.06);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    border: var(--border-light);
+    box-shadow: var(--shadow-sm);
     margin-bottom: 40px;
     display: flex;
     gap: 40px;
     align-items: center;
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 .mission-icon {
     width: 80px;
     height: 80px;
     min-width: 80px;
-    background: linear-gradient(135deg, #EEEDFE, #E0DCFC);
+    background: linear-gradient(135deg, var(--purple-50), #E0DCFC);
     border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 34px;
-    color: #534AB7;
+    color: var(--purple-600);
 }
 .mission-text h2 {
     font-size: 22px;
@@ -85,14 +88,14 @@
     margin-bottom: 40px;
 }
 .value-card {
-    background: #fff;
+    background: var(--bg-surface);
     border-radius: 16px;
     padding: 28px 24px;
-    border: 0.5px solid rgba(0,0,0,0.06);
-    transition: all 0.25s;
+    border: var(--border-light);
+    transition: all 0.25s, background 0.3s ease;
 }
 .value-card:hover {
-    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    box-shadow: var(--shadow-md);
     transform: translateY(-3px);
 }
 .value-icon {
@@ -119,10 +122,11 @@
 
 .about-cta {
     text-align: center;
-    background: #fff;
+    background: var(--bg-surface);
     border-radius: 20px;
     padding: 48px 32px;
-    border: 0.5px solid rgba(0,0,0,0.06);
+    border: var(--border-light);
+    transition: background 0.3s ease, border-color 0.3s ease;
 }
 .about-cta h2 {
     font-size: 24px;
@@ -144,13 +148,13 @@
     padding: 14px 32px;
     border-radius: 12px;
     text-decoration: none;
-    background: #534AB7;
+    background: var(--purple-600);
     color: #fff;
     transition: all 0.25s;
     font-family: inherit;
 }
 .about-cta .btn-cta:hover {
-    background: #3C3489;
+    background: var(--purple-800);
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(83,74,183,0.3);
 }
@@ -182,21 +186,21 @@
 
 <div class="values">
     <div class="value-card">
-        <div class="value-icon" style="background:#EEEDFE;color:#534AB7;">
+        <div class="value-icon" style="background:var(--purple-50);color:var(--purple-600);">
             <i class="ti ti-bolt"></i>
         </div>
         <h3>Fast by design</h3>
         <p>Built with Django and PostgreSQL, every action completes instantly. No waiting, no reloads — just seamless task management.</p>
     </div>
     <div class="value-card">
-        <div class="value-icon" style="background:#EAF3DE;color:#3B6D11;">
+        <div class="value-icon" style="background:var(--green-50);color:var(--green-600);">
             <i class="ti ti-shield-lock"></i>
         </div>
         <h3>Privacy first</h3>
         <p>Your tasks are stored securely and never shared. No tracking, no ads, no third-party access.</p>
     </div>
     <div class="value-card">
-        <div class="value-icon" style="background:#FAEEDA;color:#854F0B;">
+        <div class="value-icon" style="background:var(--amber-50);color:var(--amber-600);">
             <i class="ti ti-heart-hand"></i>
         </div>
         <h3>Made with care</h3>

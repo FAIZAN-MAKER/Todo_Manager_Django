@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
             --purple-50: #EEEDFE; --purple-600: #534AB7; --purple-800: #3C3489;
             --green-50: #EAF3DE; --green-600: #3B6D11;
@@ -18,13 +19,70 @@
             --gray-400: #9CA3AF; --gray-600: #4B5563; --gray-900: #111827;
             --radius-md: 8px; --radius-lg: 12px;
             --border: 0.5px solid rgba(0,0,0,0.09);
+            --bg-body: #f4f5f8;
+            --bg-surface: #ffffff;
+            --bg-elevated: #ffffff;
+            --bg-hover: rgba(0,0,0,0.02);
+            --bg-toolbar: var(--gray-50);
+            --border-light: rgba(0,0,0,0.06);
+            --border-med: rgba(0,0,0,0.09);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.02);
+            --shadow-md: 0 8px 30px rgba(0,0,0,0.06);
+            --shadow-lg: 0 24px 80px rgba(0,0,0,0.15);
+            --overlay: rgba(0,0,0,0.3);
+            --gradient-text: linear-gradient(135deg, #534AB7, #8B7FDF);
+            --navbar-bg: #ffffff;
         }
-        body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: #f4f5f8; min-height: 100vh; color: var(--gray-900); -webkit-font-smoothing: antialiased; }
 
-        .navbar { background: #fff; border-bottom: var(--border); padding: 0 32px; display: flex; justify-content: space-between; align-items: center; height: 58px; position: sticky; top: 0; z-index: 1000; }
+        [data-theme="dark"] {
+            --purple-50: #2a2547; --purple-600: #8B7FDF; --purple-800: #A99EE8;
+            --green-50: #1c2e14; --green-600: #6BBF2B;
+            --amber-50: #2e2312; --amber-600: #E8A623;
+            --red-50: #2e1a1a; --red-600: #E85454;
+            --gray-50: #161922; --gray-100: #1e2230; --gray-200: #2a2f3f;
+            --gray-400: #7a8398; --gray-600: #a0a8ba; --gray-900: #e4e9f2;
+            --border: 0.5px solid rgba(255,255,255,0.07);
+            --bg-body: #0d0f16;
+            --bg-surface: #151821;
+            --bg-elevated: #1a1e2a;
+            --bg-hover: rgba(255,255,255,0.02);
+            --bg-toolbar: var(--gray-50);
+            --border-light: rgba(255,255,255,0.05);
+            --border-med: rgba(255,255,255,0.07);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 8px 30px rgba(0,0,0,0.4);
+            --shadow-lg: 0 24px 80px rgba(0,0,0,0.5);
+            --overlay: rgba(0,0,0,0.6);
+            --gradient-text: linear-gradient(135deg, #8B7FDF, #B8AFF0);
+            --navbar-bg: #151821;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-body);
+            min-height: 100vh;
+            color: var(--gray-900);
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            background: var(--navbar-bg);
+            border-bottom: var(--border);
+            padding: 0 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 58px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .nav-left, .nav-right { display: flex; align-items: center; gap: 6px; }
         .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; }
-        .brand-icon { width: 30px; height: 30px; background: var(--purple-600); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
-        .brand-name { font-size: 15px; font-weight: 600; color: var(--gray-900); letter-spacing: -0.2px; }
+        .brand-icon { width: 30px; height: 30px; background: var(--purple-600); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; transition: background 0.3s ease; }
+        .brand-name { font-size: 15px; font-weight: 600; color: var(--gray-900); letter-spacing: -0.2px; transition: color 0.3s ease; }
         .nav-links { list-style: none; display: flex; gap: 2px; align-items: center; }
         .nav-links a { font-size: 13.5px; color: var(--gray-600); text-decoration: none; padding: 6px 12px; border-radius: var(--radius-md); transition: background 0.15s, color 0.15s; }
         .nav-links a:hover { background: var(--gray-100); color: var(--gray-900); }
@@ -32,10 +90,27 @@
         .nav-cta { margin-left: 10px; font-size: 13px; font-weight: 500; color: #fff !important; background: var(--purple-600); padding: 7px 16px; border-radius: var(--radius-md); text-decoration: none; transition: background 0.15s; }
         .nav-cta:hover { background: var(--purple-800) !important; }
 
+        .theme-btn {
+            background: var(--gray-100);
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--gray-600);
+            font-size: 16px;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+            margin-left: 10px;
+        }
+        .theme-btn:hover { background: var(--gray-200); color: var(--gray-900); transform: rotate(15deg); }
+
         .content { max-width: 960px; margin: 0 auto; padding: 36px 20px; }
 
         .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; max-width: 340px; }
-        .toast { display: flex; align-items: center; gap: 10px; padding: 11px 14px; background: #fff; border-radius: var(--radius-md); border: var(--border); border-left: 2px solid var(--green-600); box-shadow: 0 4px 20px rgba(0,0,0,0.09); animation: toastIn 0.3s cubic-bezier(0.16,1,0.3,1); transition: opacity 0.35s, transform 0.35s; }
+        .toast { display: flex; align-items: center; gap: 10px; padding: 11px 14px; background: var(--bg-elevated); border-radius: var(--radius-md); border: var(--border); border-left: 2px solid var(--green-600); box-shadow: 0 4px 20px rgba(0,0,0,0.12); animation: toastIn 0.3s cubic-bezier(0.16,1,0.3,1); transition: opacity 0.35s, transform 0.35s, background 0.3s ease, border-color 0.3s ease; }
         @keyframes toastIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         .toast-icon { flex-shrink: 0; width: 24px; height: 24px; background: var(--green-50); color: var(--green-600); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .toast-msg { flex: 1; font-size: 13px; font-weight: 500; color: var(--gray-900); }
@@ -51,19 +126,26 @@
 </head>
 <body>
     <nav class="navbar">
-        <a href="{% url 'homepage' %}" class="brand">
-            <div class="brand-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-            </div>
-            <span class="brand-name">TodoManager</span>
-        </a>
-        <ul class="nav-links">
-            <li><a href="{% url 'homepage' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
-            <li><a href="{% url 'todolist' %}" class="{% if '/todolist' in request.path %}active{% endif %}">Tasks</a></li>
-            <li><a href="{% url 'about' %}" class="{% if '/about/' in request.path %}active{% endif %}">About</a></li>
-            <li><a href="{% url 'contact' %}" class="{% if '/contact/' in request.path %}active{% endif %}">Contact</a></li>
+        <div class="nav-left">
+            <a href="{% url 'homepage' %}" class="brand">
+                <div class="brand-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+                </div>
+                <span class="brand-name">TodoManager</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'homepage' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+                <li><a href="{% url 'todolist' %}" class="{% if '/todolist' in request.path %}active{% endif %}">Tasks</a></li>
+                <li><a href="{% url 'about' %}" class="{% if '/about/' in request.path %}active{% endif %}">About</a></li>
+                <li><a href="{% url 'contact' %}" class="{% if '/contact/' in request.path %}active{% endif %}">Contact</a></li>
+            </ul>
+        </div>
+        <div class="nav-right">
             <a href="{% url 'todolist' %}" class="nav-cta">+ New task</a>
-        </ul>
+            <button class="theme-btn" id="themeToggle" title="Toggle dark mode">
+                <i class="ti ti-moon" id="themeIcon"></i>
+            </button>
+        </div>
     </nav>
 
     {% if messages %}
@@ -85,6 +167,29 @@
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.toast').forEach(function (t) {
                 setTimeout(function () { t.style.opacity='0'; t.style.transform='translateX(16px)'; setTimeout(function(){t.remove();},350); }, 3500);
+            });
+
+            var html = document.documentElement;
+            var btn = document.getElementById('themeToggle');
+            var icon = document.getElementById('themeIcon');
+
+            function setTheme(theme) {
+                html.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+                icon.className = theme === 'dark' ? 'ti ti-sun' : 'ti ti-moon';
+            }
+
+            var saved = localStorage.getItem('theme');
+            if (saved) {
+                setTheme(saved);
+            } else {
+                var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark ? 'dark' : 'light');
+            }
+
+            btn.addEventListener('click', function () {
+                var current = html.getAttribute('data-theme');
+                setTheme(current === 'dark' ? 'light' : 'dark');
             });
         });
     </script>
