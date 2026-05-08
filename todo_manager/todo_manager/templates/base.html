@@ -125,6 +125,7 @@
     </style>
 </head>
 <body>
+    {% block navbar %}
     <nav class="navbar">
         <div class="nav-left">
             <a href="{% url 'homepage' %}" class="brand">
@@ -141,12 +142,13 @@
             </ul>
         </div>
         <div class="nav-right">
-            <a href="{% url 'todolist' %}" class="nav-cta">+ New task</a>
+            <a href="{% url 'register' %}" class="nav-cta">Sign up</a>
             <button class="theme-btn" id="themeToggle" title="Toggle dark mode">
                 <i class="ti ti-moon" id="themeIcon"></i>
             </button>
         </div>
     </nav>
+    {% endblock %}
 
     {% if messages %}
     <div class="toast-container">
