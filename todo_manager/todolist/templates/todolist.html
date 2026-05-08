@@ -1,0 +1,443 @@
+{% extends 'base.html' %}
+
+{% block title %}Todo List - TodoManager{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><span class="header-icon">📋</span> Task Board</h1>
+    <p>View and manage all your tasks in one place</p>
+</div>
+
+<div class="add-task-bar">
+    <form class="add-task-inner" method="post">
+        {% csrf_token %}
+        <input type="text" class="add-task-input" placeholder="Enter a new task..." value="" name="task">
+        <button class="btn btn-add">➕ Add Task</button>
+    </form>
+</div>
+
+<div class="table-container">
+    <div class="table-header">
+        <div class="table-title">
+            <span class="table-icon">📝</span> All Tasks
+        </div>
+        <div class="task-count">{{ tasks|length }} task{{ tasks|length|pluralize }}</div>
+    </div>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-id">#</th>
+                    <th class="col-task">Task</th>
+                    <th class="col-status">Status</th>
+                    <th class="col-actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td class="col-id"><span class="id-badge">{{ task.id }}</span></td>
+                    <td class="col-task">{{ task.task }}</td>
+                    <td class="col-status">
+                        {% if task.is_completed %}
+                        <span class="status-badge completed">✅ Completed</span>
+                        {% else %}
+                        <span class="status-badge pending">⏳ Pending</span>
+                        {% endif %}
+                    </td>
+                    <td class="col-actions">
+                        <button class="btn btn-edit" title="Edit task">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            Edit
+                        </button>
+                        <button class="btn btn-delete" title="Delete task" data-delete-url="{% url 'delete_task' task.id %}">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr class="empty-row">
+                    <td colspan="4">
+                        <div class="empty-state">
+                            <span class="empty-icon">📭</span>
+                            <h3>No tasks yet</h3>
+                            <p>Your task list is empty. Start by adding a new task!</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal-box">
+        <div class="modal-icon">🗑️</div>
+        <h3 class="modal-title">Delete Task</h3>
+        <p class="modal-desc">Are you sure you want to delete this task? This action cannot be undone.</p>
+        <div class="modal-actions">
+            <button class="btn btn-cancel" id="modalCancel">Cancel</button>
+            <a href="#" class="btn btn-confirm-delete" id="modalConfirm">Yes, Delete</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+.page-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+.page-header h1 {
+    font-size: 36px;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.page-header p {
+    font-size: 16px;
+    color: #7f8c8d;
+}
+.header-icon {
+    font-size: 32px;
+}
+.add-task-bar {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #eef0f5;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+}
+.add-task-inner {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+.add-task-input {
+    flex: 1;
+    padding: 12px 18px;
+    border: 2px solid #e8eaef;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: inherit;
+    color: #2c3e50;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background: #fafbfc;
+}
+.add-task-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102,126,234,0.12);
+    background: white;
+}
+.add-task-input::placeholder {
+    color: #b0b7c3;
+}
+.btn-add {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+.btn-add:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102,126,234,0.35);
+}
+.btn-add:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+.table-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    overflow: hidden;
+    border: 1px solid #eef0f5;
+}
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    border-bottom: 1px solid #eef0f5;
+    background: #fafbfc;
+}
+.table-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.table-icon {
+    font-size: 18px;
+}
+.task-count {
+    font-size: 13px;
+    color: #95a5a6;
+    font-weight: 500;
+    background: #f0f1f5;
+    padding: 4px 14px;
+    border-radius: 20px;
+}
+.table-wrapper {
+    overflow-x: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+thead {
+    background: #f8f9fb;
+}
+th {
+    text-align: left;
+    padding: 14px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #7f8c8d;
+    border-bottom: 2px solid #eef0f5;
+}
+td {
+    padding: 14px 20px;
+    border-bottom: 1px solid #f0f2f7;
+    color: #2c3e50;
+    font-size: 15px;
+}
+tbody tr {
+    transition: background 0.2s ease;
+}
+tbody tr:hover {
+    background: #f8f9fc;
+}
+tbody tr:last-child td {
+    border-bottom: none;
+}
+.col-id {
+    width: 70px;
+}
+.col-task {
+    min-width: 280px;
+}
+.col-status {
+    width: 140px;
+}
+.col-actions {
+    width: 200px;
+    text-align: right;
+}
+.id-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #667eea20, #764ba220);
+    color: #667eea;
+    font-weight: 700;
+    font-size: 13px;
+    border-radius: 8px;
+}
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+.status-badge.completed {
+    background: #e6f7ee;
+    color: #27ae60;
+}
+.status-badge.pending {
+    background: #fef6e6;
+    color: #f39c12;
+}
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+.btn-edit {
+    background: #eef1ff;
+    color: #667eea;
+}
+.btn-edit:hover {
+    background: #dde2ff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(102,126,234,0.2);
+}
+.btn-delete {
+    background: #ffe8e8;
+    color: #e74c3c;
+    margin-left: 6px;
+}
+.btn-delete:hover {
+    background: #ffd5d5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(231,76,60,0.2);
+}
+.empty-row td {
+    padding: 0;
+}
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+.empty-icon {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 12px;
+}
+.empty-state h3 {
+    font-size: 20px;
+    color: #2c3e50;
+    margin-bottom: 6px;
+}
+.empty-state p {
+    font-size: 14px;
+    color: #95a5a6;
+}
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+.modal-overlay.active {
+    display: flex;
+}
+.modal-box {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 36px 28px;
+    width: 400px;
+    max-width: 90vw;
+    text-align: center;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+    animation: modalPop 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalPop {
+    from { opacity: 0; transform: scale(0.85) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+.modal-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+.modal-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+.modal-desc {
+    font-size: 15px;
+    color: #7f8c8d;
+    margin-bottom: 28px;
+    line-height: 1.5;
+}
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+.btn-cancel {
+    padding: 11px 28px;
+    background: #f0f2f7;
+    color: #2c3e50;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-cancel:hover {
+    background: #e4e7ef;
+}
+.btn-confirm-delete {
+    padding: 11px 28px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.btn-confirm-delete:hover {
+    background: #c0392b;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(231,76,60,0.3);
+}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toasts = document.querySelectorAll('.toast');
+        toasts.forEach(function(toast) {
+            setTimeout(function() {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(function() { toast.remove(); }, 400);
+            }, 3500);
+        });
+
+        const modal = document.getElementById('deleteModal');
+        const confirmBtn = document.getElementById('modalConfirm');
+        const cancelBtn = document.getElementById('modalCancel');
+
+        document.querySelectorAll('[data-delete-url]').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                confirmBtn.href = btn.getAttribute('data-delete-url');
+                modal.classList.add('active');
+            });
+        });
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        cancelBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeModal();
+        });
+    });
+</script>
+{% endblock %}
