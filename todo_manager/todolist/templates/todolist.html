@@ -179,7 +179,7 @@ tbody tr:last-child td { border-bottom: none; }
         <tbody>
             {% for task in page_obj %}
             <tr>
-                <td><span class="id-cell">{{ task.id }}</span></td>
+                <td><span class="id-cell">{{ page_obj.start_index|add:forloop.counter0 }}</span></td>
                 <td><span class="task-cell {% if task.is_completed %}done{% endif %}">{{ task.task }}</span></td>
                 <td>
                     {% if task.is_completed %}
