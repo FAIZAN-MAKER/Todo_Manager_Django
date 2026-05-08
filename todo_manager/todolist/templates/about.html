@@ -5,10 +5,24 @@
 
 {% block extra_css %}
 .about-hero {
-    text-align: center;
-    padding: 60px 0 40px;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+    padding: 20px 0 48px;
 }
-.about-hero .badge {
+.about-hero-left { flex: 1; display: flex; justify-content: center; }
+.about-hero-left img {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 24px;
+    object-fit: cover;
+    box-shadow: 0 24px 80px rgba(83,74,183,0.15);
+    border: 3px solid var(--purple-50);
+    transition: transform 0.4s ease;
+}
+.about-hero-left img:hover { transform: scale(1.02); }
+.about-hero-right { flex: 1; max-width: 480px; }
+.about-hero-right .badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -23,26 +37,53 @@
     text-transform: uppercase;
     transition: background 0.3s ease, color 0.3s ease;
 }
-.about-hero h1 {
+.about-hero-right h1 {
     font-size: 40px;
     font-weight: 800;
     color: var(--gray-900);
     letter-spacing: -1px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+    line-height: 1.15;
     transition: color 0.3s ease;
 }
-.about-hero h1 span {
+.about-hero-right h1 span {
     background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
-.about-hero p {
+.about-hero-right .sub {
     font-size: 16px;
     color: var(--gray-400);
     line-height: 1.7;
-    max-width: 560px;
-    margin: 0 auto;
+    margin-bottom: 20px;
+}
+.creator-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--bg-surface);
+    border-radius: 14px;
+    border: var(--border-light);
+}
+.creator-meta .name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+.creator-meta .role {
+    font-size: 13px;
+    color: var(--gray-400);
+}
+.creator-meta .tag {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--purple-600);
+    background: var(--purple-50);
+    padding: 4px 10px;
+    border-radius: 20px;
 }
 
 .mission-card {
@@ -160,20 +201,37 @@
 }
 
 @media (max-width: 768px) {
-    .about-hero h1 { font-size: 30px; }
+    .about-hero { flex-direction: column; padding: 10px 0 32px; gap: 28px; }
+    .about-hero-left img { max-width: 260px; }
+    .about-hero-right { max-width: 100%; }
+    .about-hero-right h1 { font-size: 30px; }
     .mission-card { flex-direction: column; text-align: center; padding: 28px 24px; }
     .values { grid-template-columns: 1fr; }
+    .creator-meta { flex-wrap: wrap; }
+    .creator-meta .tag { margin-left: 0; }
 }
 {% endblock %}
 
 {% block content %}
 <div class="about-hero">
-    <div class="badge">
-        <i class="ti ti-info-circle" style="font-size:13px"></i>
-        About us
+    <div class="about-hero-left">
+        <img src="{% static 'image/me.jpeg' %}" alt="Muhammad Faizan">
     </div>
-    <h1>Building tools that<br><span>make life simpler</span></h1>
-    <p>TodoManager is a clean, fast, and intuitive task management app built with Django. No fluff — just what you need to get things done.</p>
+    <div class="about-hero-right">
+        <div class="badge">
+            <i class="ti ti-info-circle" style="font-size:13px"></i>
+            About us
+        </div>
+        <h1>Building tools that<br><span>make life simpler</span></h1>
+        <p class="sub">TodoManager is a clean, fast, and intuitive task management app built with Django. No fluff — just what you need to get things done.</p>
+        <div class="creator-meta">
+            <div>
+                <div class="name">Muhammad Faizan</div>
+                <div class="role">Creator & Developer</div>
+            </div>
+            <span class="tag">Hi &#128075;</span>
+        </div>
+    </div>
 </div>
 
 <div class="mission-card">
